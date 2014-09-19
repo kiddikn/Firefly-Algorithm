@@ -74,7 +74,7 @@ void OriginalFirefly::move(int fi,int fj){
 	double attractiveness = this->beta0 * exp(-gamma*r*r);
 	//double scale = abs(ub - lb);
 	//levy flyght
-	double levy = this->levyFlight(this->genNum/1.08); //levy flightに与える値を考察する必要がある
+	double levy = this->levyFlight(this->genNum); //levy flightに与える値を考察する必要がある
 	for(int k = 0;k < this->D;k++){
 		//NOMAL version
 		//double rand = mersenneTwister->genrand_real1();
@@ -89,42 +89,50 @@ double OriginalFirefly::levyFlight(int gen_num){
 	rand = rand - (double)0.5;
 	double levy = this->sign(rand);
 	double d = 0;
-	//d = gen_num / pow(rand,1/1.001);
-	/*if(gen_num == 0.0){
-		d = 1;
-	}else{*/
-		//d = pow(gen_num,-this->lambda); //bug x^y:xが0で、かつ、yが0以下の場合、定義域エラーが発生する。結果が1.#INF000になってしまう
-		//以下パレート分布に従う乱数生成を追加
-		d = gen_num / pow(1-rand,1/this->lambda);
-		//cout << d << endl;
-		//以下d = gen_num * t * sまでlevy.cから追加
-		//c=>-lambda,alpha=>gen_num
-		//double u, v, t, s;
-		//u = M_PI * rand;
-		//if (alpha == 1)		/* cauchy case */
-		//{
-		//	t = tan (u);
-		//	return gen_num * t;
-		//}
-
-		//do
-		//{
-		//	v = exp(rand);
-		//}
-		//while (v == 0);
-
-		//if (alpha == 2)             /* gaussian case */
-		//{
-		//	t = 2 * sin (u) * sqrt(v);
-		//	return gen_num * t;
-		//}
-
-		///* general case */
-		//t = sin(this->lambda * u) / pow(cos(u), 1 / this->lambda);
-		//s = pow(cos((1 - this->lambda) * u) / v, (1 - this->lambda) / this->lambda);
-
-		//d = gen_num * t * s;
+	//==謎の方法1
+	//if(gen_num == 0.0){
+	//	d = 1;
+	//}else{
+	//	d = pow(gen_num,-this->lambda); //bug x^y:xが0で、かつ、yが0以下の場合、定義域エラーが発生する。結果が1.#INF000になってしまう
 	//}
+
+	//==方法2==パレート分布に従う乱数生成を追加
+	//d = gen_num / pow(1-rand,1/this->lambda);
+	//cout << d << endl;
+
+	//==方法3 cuckooのサンプルプログラムより
+	rand = (double)mersenneTwister->genrand_real1();
+	d = (gen_num/1.001) / pow(rand,0.001);
+
+	//==方法4 levy分布
+	//以下d = gen_num * t * sまでlevy.cから追加
+	//c=>-lambda,alpha=>gen_num
+	//double u, v, t, s;
+	//u = M_PI * rand;
+	//if (alpha == 1)		/* cauchy case */
+	//{
+	//	t = tan (u);
+	//	return gen_num * t;
+	//}
+
+	//do
+	//{
+	//	v = exp(rand);
+	//}
+	//while (v == 0);
+
+	//if (alpha == 2)             /* gaussian case */
+	//{
+	//	t = 2 * sin (u) * sqrt(v);
+	//	return gen_num * t;
+	//}
+
+	///* general case */
+	//t = sin(this->lambda * u) / pow(cos(u), 1 / this->lambda);
+	//s = pow(cos((1 - this->lambda) * u) / v, (1 - this->lambda) / this->lambda);
+
+	//d = gen_num * t * s;
+
 	return levy*d;
 }
 
