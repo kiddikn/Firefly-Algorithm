@@ -102,7 +102,7 @@ double OriginalFirefly::levyFlight(int gen_num){
 
 	//==方法3 cuckooのサンプルプログラムより
 	rand = (double)mersenneTwister->genrand_real1();
-	d = (gen_num/1.001) / pow(rand,0.001);
+	d = (gen_num/this->lambda) / pow(rand,0.001);
 
 	//==方法4 levy分布
 	//以下d = gen_num * t * sまでlevy.cから追加
@@ -133,8 +133,34 @@ double OriginalFirefly::levyFlight(int gen_num){
 
 	//d = gen_num * t * s;
 
+	//方法5 from paper[Yang_nature_book_part.pdf p16 eq(2.21)]
+	double sigma = 0;
+	sigma=pow((tgamma(1+this->lambda)*sin(M_PI*lambda/2)/(tgamma((1+this->lambda)/2)*lambda*pow(2,((this->lambda-1)/2)))),(1/lambda));
+	rand = (double)mersenneTwister->genrand_real1();
+	double u = rand * sigma;
+	rand = (double)mersenneTwister->genrand_real1();
+	double v = rand;
+	d = u / pow(abs(v),1/this->lambda);
+	//d = d/ gen_num;
+
 	return levy*d;
 }
+
+double OriginalFirefly::tgamma(double operand)
+	{
+		double h = 0.1; // 刻み幅
+		int n = 128; //　計算回数
+		double ans = 0.0;
+		for (int i = -32; i < n - 32; i++){// ここの数値は適当
+			// シグマの部分の計算
+			double t = h * i;
+			double phi = exp(t - exp(-t)); // 解析関数φ(t)
+			double phid = phi * (exp(-t) + 1); // φ(t)の導関数
+			ans += pow(phi, operand) * phid * exp(-phi);
+		}
+		ans *= h;
+		return ans;
+	}
 
 //引数で与えられた数の符号を返す
 double OriginalFirefly::sign(double target){
