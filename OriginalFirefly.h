@@ -53,6 +53,7 @@ class OriginalFirefly{
 		void save();
 		double levyFlight(int gen_num);
 		double sign(double target);
+		double tgamma(double operand); //math.h‚ÉgammaŠÖ”‚ª‚È‚©‚Á‚½‚Ì‚Å‹ß—ŠÖ”‚ğì¬
 
 	public:
 		OriginalFirefly(int seed,double alpha,double beta0,double gamma,int ffNum,int D,int genMax);

@@ -9,7 +9,7 @@ using namespace std;
 int main(){
 	int length = 10;
 	int FILE_EXPORT = 0;
-	int seed[10] = {181,149,163,179,181,223,449,547,659,811};
+	int seed[10] = {181,149,163,167,181,223,439,547,659,811};
 	string fname = "data_a020b1r1f40d128_levy.csv";
 	string fsname = "data/seedAvg/";
 	fsname += fname;

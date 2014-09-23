@@ -102,7 +102,7 @@ double OriginalFirefly::levyFlight(int gen_num){
 
 	//==方法3 cuckooのサンプルプログラムより
 	rand = (double)mersenneTwister->genrand_real1();
-	d = (gen_num/this->lambda) / pow(rand,0.001);
+	d = gen_num / (pow(1-rand,0.001)*this->lambda);
 
 	//==方法4 levy分布
 	//以下d = gen_num * t * sまでlevy.cから追加
@@ -134,13 +134,13 @@ double OriginalFirefly::levyFlight(int gen_num){
 	//d = gen_num * t * s;
 
 	//方法5 from paper[Yang_nature_book_part.pdf p16 eq(2.21)]
-	double sigma = 0;
-	sigma=pow((tgamma(1+this->lambda)*sin(M_PI*lambda/2)/(tgamma((1+this->lambda)/2)*lambda*pow(2,((this->lambda-1)/2)))),(1/lambda));
+	/*double sigma = 0;
+	sigma = pow((tgamma(1+this->lambda)*sin(M_PI*lambda/2)/(tgamma((1+this->lambda)/2)*lambda*pow(2,((this->lambda-1)/2)))),(1/lambda));
 	rand = (double)mersenneTwister->genrand_real1();
 	double u = rand * sigma;
 	rand = (double)mersenneTwister->genrand_real1();
 	double v = rand;
-	d = u / pow(abs(v),1/this->lambda);
+	d = u / pow(abs(v),1/this->lambda);*/
 	//d = d/ gen_num;
 
 	return levy*d;
